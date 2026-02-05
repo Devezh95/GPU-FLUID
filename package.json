@@ -1,0 +1,24 @@
+{
+  "name": "GPU-Fluid-Experiments",
+  "version": "1.0.0",
+  "description": "This repo is a little old and dusty and likely doesn't build with the latest tools, If you're looking for a version with working build instructions check out [this fork: BathBombFluidDynamics](https://github.com/ollyc2015/BathBombFluidDynamics) by [Oliver Curtis](https://github.com/ollyc2015) which adds some interesting effects.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "http-server demo -c-1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/haxiomic/GPU-Fluid-Experiments.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/haxiomic/GPU-Fluid-Experiments/issues"
+  },
+  "homepage": "https://github.com/haxiomic/GPU-Fluid-Experiments#readme",
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+}
