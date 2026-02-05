@@ -6,17 +6,17 @@ export const TOUCH_STEP_SIZE = 0.05;
 export const TOUCH_RANDOMNESS = 0.5;
 
 // Функция генерации pointer-событий
-export function emitPointer(canvas, type, x, y) {
+export function emitMouse(canvas, type, x, y) {
   const rect = canvas.getBoundingClientRect();
-  const event = new PointerEvent(type, {
-    pointerType: "touch",
+
+  const event = new MouseEvent(type, {
     clientX: rect.left + x * rect.width,
     clientY: rect.top + y * rect.height,
     bubbles: true,
     cancelable: true,
   });
+
   canvas.dispatchEvent(event);
-  console.log(`Pointer event: ${type} at (${x.toFixed(2)}, ${y.toFixed(2)})`);
 }
 
 
@@ -44,7 +44,7 @@ export function syntheticTouch(canvas) {
   let x = Math.random();
   let y = Math.random();
 
-  emitPointer(canvas, "pointerdown", x, y);
+  emitMouse(canvas, "mousedown", x, y);
 
   for (let i = 0; i < TOUCH_STEPS; i++) {
     x += (Math.random() - 0.5) * TOUCH_STEP_SIZE * TOUCH_RANDOMNESS;
@@ -53,10 +53,10 @@ export function syntheticTouch(canvas) {
     x = Math.max(0, Math.min(1, x));
     y = Math.max(0, Math.min(1, y));
 
-    emitPointer(canvas, "pointermove", x, y);
+    emitMouse(canvas, "mousemove", x, y);
   }
 
-  emitPointer(canvas, "pointerup", x, y);
+  emitMouse(canvas, "mouseup", x, y);
   console.log("Synthetic touch completed.\n");
 }
 
