@@ -1,11 +1,55 @@
-# Cross-platform GPU fluid simulation
+# GPU Fluid Experiments
 
-### [Demo](http://haxiomic.github.io/GPU-Fluid-Experiments/html5/)
+## 📦 Установка и запуск локально
 
-This repo is a little old and dusty and likely doesn't build with the latest tools, If you're looking for a version with working build instructions check out [this fork: BathBombFluidDynamics](https://github.com/ollyc2015/BathBombFluidDynamics) by [Oliver Curtis](https://github.com/ollyc2015) which adds some interesting effects.
+1. Клонируем репозиторий и переходим в папку проекта (команды можно выполнять в терминале VS Code):
 
-I'm currently working on a rewrite so watch this space :)
+git clone https://github.com/Devezh95/GPU-FLUID.git
+cd GPU-FLUID
 
-------
+2. Устанавливаем зависимости:
 
-If you have an idea and you want to collaborate, feel free to get in touch with me [haxiomic@gmail.com](mailto:haxiomic@gmail.com)
+npm install
+
+3. Запускаем локальный сервер:
+
+npm run start
+
+Сервер откроет папку demo/ по адресу:
+http://localhost:8080
+
+4. Откройте браузер и перейдите по адресу http://localhost:8080, чтобы увидеть симуляцию.
+
+---
+
+## 🔧 Модуль автоколебаний (автокасаний)
+
+Логика автоколебаний вынесена в отдельный модуль:
+
+/js/syntheticTouch.js
+
+В модуле реализовано:
+
+- syntheticTouch(canvas) — имитация автоматических касаний воды
+- emitPointer(canvas, type, x, y) — генерация pointer-событий для canvas
+- attachRealPointerListeners(canvas) — логирование реальных касаний пользователя
+- waitForCanvas(callback) — ожидание появления canvas в DOM
+
+---
+
+## ⚙ Доступные параметры автоколебаний
+
+Параметры настраиваются в файле syntheticTouch.js.
+
+AUTO_TOUCH_INTERVAL — интервал между автокасаниями (по умолчанию 1500 мс)  
+TOUCH_STEPS — количество шагов движения касания (по умолчанию 3)  
+TOUCH_STEP_SIZE — максимальный шаг движения в нормализованных координатах 0..1 (по умолчанию 0.05)  
+TOUCH_RANDOMNESS — случайный разброс движения dx/dy (по умолчанию 0.5)
+
+---
+
+## 📝 Примечания
+
+- Реальные и синтетические касания логируются в консоль браузера.
+- При необходимости логирование реальных касаний можно отключить, убрав вызов attachRealPointerListeners.
+- Проект запускается без сборки, через простой локальный HTTP-сервер.
