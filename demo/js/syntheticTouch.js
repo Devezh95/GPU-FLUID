@@ -1,74 +1,101 @@
-// Параметры синтетических касаний
+export const AUTO_TOUCH_INTERVAL = 5000; // Каждые 5 сек
+export const TOUCH_DURATION = 800; // Длительность касания (мс)
+export const MOVE_STEPS = 15; // Количество шагов движения (больше = плавнее)
 
-export const AUTO_TOUCH_INTERVAL = 1500;
-export const TOUCH_STEPS = 3;
-export const TOUCH_STEP_SIZE = 0.05;
-export const TOUCH_RANDOMNESS = 0.5;
+export async function syntheticTouch() {
+  // Случайная позиция на экране
+  const startX = Math.random() * window.innerWidth;
+  const startY = Math.random() * window.innerHeight;
 
-// Функция генерации pointer-событий
-export function emitMouse(canvas, type, x, y) {
-  const rect = canvas.getBoundingClientRect();
+  // Конечная позиция (близко к начальной, спокойное движение)
+  const endX = startX + (Math.random() - 0.5) * 100;
+  const endY = startY + (Math.random() - 0.5) * 100;
 
-  const event = new MouseEvent(type, {
-    clientX: rect.left + x * rect.width,
-    clientY: rect.top + y * rect.height,
-    bubbles: true,
-    cancelable: true,
-  });
+  console.log(
+    `🌊 SMOOTH TOUCH START at (${startX.toFixed(0)}, ${startY.toFixed(0)})`,
+  );
 
-  canvas.dispatchEvent(event);
-}
+  // === MOUSEDOWN (начало касания) ===
+  document.elementFromPoint(startX, startY)?.dispatchEvent(
+    new MouseEvent("mousedown", {
+      bubbles: true,
+      cancelable: true,
+      clientX: startX,
+      clientY: startY,
+      screenX: startX,
+      screenY: startY,
+      pageX: startX,
+      pageY: startY,
+      buttons: 1,
+    }),
+  );
+  document.elementFromPoint(startX, startY)?.dispatchEvent(
+    new MouseEvent("mousedown", {
+      bubbles: true,
+      cancelable: true,
+      clientX: startX,
+      clientY: startY,
+      screenX: startX,
+      screenY: startY,
+      pageX: startX,
+      pageY: startY,
+      buttons: 1,
+    }),
+  );
+  // === ПЛАВНОЕ ДВИЖЕНИЕ (MOUSEMOVE) ===
+  const stepDuration = TOUCH_DURATION / MOVE_STEPS;
 
+  for (let i = 0; i < MOVE_STEPS; i++) {
+    await delay(stepDuration);
 
-// Логирование реальных касаний пользователя P.S. Можно закомментить если не нужно:)
-export function attachRealPointerListeners(canvas) {
-  canvas.addEventListener("pointerdown", (e) => {
-    console.log(
-      `Real pointerdown at (${(e.offsetX / canvas.width).toFixed(2)}, ${(e.offsetY / canvas.height).toFixed(2)})`,
+    // Интерполяция: плавное движение от start к end
+    const progress = i / MOVE_STEPS;
+    const currentX = startX + (endX - startX) * progress;
+    const currentY = startY + (endY - startY) * progress;
+
+    document.elementFromPoint(currentX, currentY)?.dispatchEvent(
+      new MouseEvent("mousemove", {
+        bubbles: true,
+        cancelable: true,
+        clientX: currentX,
+        clientY: currentY,
+        screenX: currentX,
+        screenY: currentY,
+        pageX: currentX,
+        pageY: currentY,
+        buttons: 1,
+      }),
     );
-  });
-  canvas.addEventListener("pointermove", (e) => {
-    console.log(
-      `Real pointermove at (${(e.offsetX / canvas.width).toFixed(2)}, ${(e.offsetY / canvas.height).toFixed(2)})`,
-    );
-  });
-  canvas.addEventListener("pointerup", (e) => {
-    console.log(
-      `Real pointerup at (${(e.offsetX / canvas.width).toFixed(2)}, ${(e.offsetY / canvas.height).toFixed(2)})`,
-    );
-  });
-}
-
-// Синтетическое касание (автокасание)
-export function syntheticTouch(canvas) {
-  let x = Math.random();
-  let y = Math.random();
-
-  emitMouse(canvas, "mousedown", x, y);
-
-  for (let i = 0; i < TOUCH_STEPS; i++) {
-    x += (Math.random() - 0.5) * TOUCH_STEP_SIZE * TOUCH_RANDOMNESS;
-    y += (Math.random() - 0.5) * TOUCH_STEP_SIZE * TOUCH_RANDOMNESS;
-
-    x = Math.max(0, Math.min(1, x));
-    y = Math.max(0, Math.min(1, y));
-
-    emitMouse(canvas, "mousemove", x, y);
   }
 
-  emitMouse(canvas, "mouseup", x, y);
-  console.log("Synthetic touch completed.\n");
+  // === MOUSEUP (конец касания) ===
+  await delay(100);
+  document.elementFromPoint(endX, endY)?.dispatchEvent(
+    new MouseEvent("mouseup", {
+      bubbles: true,
+      cancelable: true,
+      clientX: endX,
+      clientY: endY,
+      screenX: endX,
+      screenY: endY,
+      pageX: endX,
+      pageY: endY,
+      buttons: 1,
+    }),
+  );
+
+  console.log(`✨ SMOOTH TOUCH END\n`);
 }
 
-// Ждём появления canvas
+function delay(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 export function waitForCanvas(callback) {
   const interval = setInterval(() => {
     const canvas = document.querySelector("#content canvas");
     if (canvas) {
       clearInterval(interval);
-      console.log(
-        "Canvas ready! Synthetic touches and real touch logging enabled.",
-      );
       callback(canvas);
     }
   }, 50);
