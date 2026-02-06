@@ -155,27 +155,26 @@
   <body>
     <div id="content"></div>
 
-    <script type="module">
-      import {
-        syntheticTouch,
-        AUTO_TOUCH_INTERVAL,
-      } from "./js/syntheticTouch.js";
+<script type="module">
+  import {
+    syntheticTouch,
+    initUserInteractionTracking,
+  } from "./js/syntheticTouch.js";
 
-      // Инициализируем Lime
-      lime.embed("content", 0, 0, "FFFFFF");
+  // Инициализируем Lime
+  lime.embed("content", 0, 0, "FFFFFF");
 
-      //   Даём время на загрузку
-      setTimeout(() => {
-        console.log("🚀 Запускаем автосимуляцию!");
+  // Инициализируем отслеживание пользовательского ввода
+  initUserInteractionTracking();
 
-        // СРАЗУ первый клик
-        syntheticTouch();
+  // Даём время на загрузку и запускаем автосимуляцию
+  setTimeout(() => {
+    console.log("🚀 Запускаем автосимуляцию!");
+    syntheticTouch();
+  }, 1000);
+</script>
 
-        // Потом каждые 3 сек
-        setInterval(() => {
-          syntheticTouch();
-        }, AUTO_TOUCH_INTERVAL);
-      }, 1000);
-    </script>
+
+
   </body>
 </html>
